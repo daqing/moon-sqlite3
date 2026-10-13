@@ -1,4 +1,4 @@
-# sqlite.mbt
+# moon-sqlite3
 
 SQLite database bindings for MoonBit - supports **native** (C FFI), **JavaScript** (Node.js), and **Wasm** (moonrun) targets.
 

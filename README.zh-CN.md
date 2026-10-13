@@ -1,4 +1,4 @@
-# sqlite.mbt
+# moon-sqlite3
 
 MoonBit 的 SQLite 数据库绑定 —— 支持 **native**（C FFI）、**JavaScript**（Node.js）和 **Wasm**（moonrun）三种目标。
 
