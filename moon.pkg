@@ -6,7 +6,7 @@ import {
 
 warnings = "-6-29-35"
 
-supported_targets = "native+js"
+supported_targets = "native+js+wasm"
 
 options(
   link: { "native": { "cc-link-flags": "-lsqlite3" } },
@@ -16,6 +16,7 @@ options(
     "sqlite_bench.mbt": [ "native" ],
     "sqlite_js.mbt": [ "js" ],
     "sqlite_native.mbt": [ "native" ],
+    "sqlite_wasm.mbt": [ "wasm" ],
     "sqlite_wbtest.mbt": [ "native" ],
   },
 )

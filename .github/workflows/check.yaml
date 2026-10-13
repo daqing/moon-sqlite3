@@ -29,6 +29,8 @@ jobs:
         run: moon check --deny-warn --target native
       - name: Moon check (js)
         run: moon check --deny-warn --target js
+      - name: Moon check (wasm)
+        run: moon check --deny-warn --target wasm
       - name: Moon info
         run: |
           moon info --target native
@@ -42,3 +44,5 @@ jobs:
         run: moon test --target native --package daqing/sqlite --file sqlite_wbtest.mbt
       - name: Moon test (js)
         run: moon test --target js
+      - name: Moon test (wasm)
+        run: moon test --target wasm
