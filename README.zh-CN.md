@@ -32,14 +32,14 @@ MoonBit 的 SQLite 数据库绑定 —— 支持 **native**（C FFI）、**JavaS
 ## 安装
 
 ```bash
-moon add daqing/sqlite
+moon add daqing/moon-sqlite3
 ```
 
 在你的 `moon.pkg` 中添加：
 
 ```
 import {
-  "daqing/sqlite",
+  "daqing/moon-sqlite3" @sqlite,
 }
 
 options(

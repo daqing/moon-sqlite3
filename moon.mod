@@ -1,6 +1,6 @@
-name = "daqing/sqlite"
+name = "daqing/moon-sqlite3"
 
-version = "0.4.0"
+version = "0.4.2"
 
 import {
   "moonbitlang/x@0.5.5",
@@ -8,7 +8,7 @@ import {
 
 readme = "README.md"
 
-repository = "https://github.com/daqing/sqlite.mbt"
+repository = "https://github.com/daqing/moon-sqlite3"
 
 license = "MIT"
 

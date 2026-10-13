@@ -4,6 +4,10 @@ import {
   "moonbitlang/core/debug",
 }
 
+import {
+  "daqing/moon-sqlite3" @sqlite,
+} for "test"
+
 warnings = "-6-29-35"
 
 supported_targets = "native+js+wasm"

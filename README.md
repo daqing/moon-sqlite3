@@ -32,14 +32,14 @@ SQLite database bindings for MoonBit - supports **native** (C FFI), **JavaScript
 ## Installation
 
 ```bash
-moon add daqing/sqlite
+moon add daqing/moon-sqlite3
 ```
 
 Add to your `moon.pkg`:
 
 ```
 import {
-  "daqing/sqlite",
+  "daqing/moon-sqlite3" @sqlite,
 }
 
 options(

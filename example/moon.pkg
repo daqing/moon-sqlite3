@@ -1,5 +1,5 @@
 import {
-  "daqing/sqlite",
+  "daqing/moon-sqlite3" @sqlite,
   "moonbitlang/x/encoding",
 }
 

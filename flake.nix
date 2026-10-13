@@ -1,5 +1,5 @@
 {
-  description = "daqing/sqlite — libsqlite3 bindings for MoonBit";
+  description = "daqing/moon-sqlite3 — libsqlite3 bindings for MoonBit";
 
   # MoonBit toolchain is intentionally NOT managed by this flake. The overlay
   # lags behind the latest `moon` release enough that its bundled core cannot
