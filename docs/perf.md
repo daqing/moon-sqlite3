@@ -60,43 +60,43 @@ Test Environment:
 ### MoonBit Detailed Results
 
 ```
-[mizchi/sqlite] bench sqlite_bench.mbt:16 ("bench: Database Open/Close") ok
+[daqing/sqlite] bench sqlite_bench.mbt:16 ("bench: Database Open/Close") ok
 time (mean ± σ)         range (min … max)
    5.65 µs ±   0.04 µs     5.59 µs …   5.72 µs  in 10 ×  17794 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:25 ("bench: Create Table") ok
+[daqing/sqlite] bench sqlite_bench.mbt:25 ("bench: Create Table") ok
 time (mean ± σ)         range (min … max)
   26.54 µs ±   0.95 µs    25.77 µs …  28.86 µs  in 10 ×   3896 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:38 ("bench: Insert Single Row") ok
+[daqing/sqlite] bench sqlite_bench.mbt:38 ("bench: Insert Single Row") ok
 time (mean ± σ)         range (min … max)
   30.34 µs ±   0.13 µs    30.17 µs …  30.51 µs  in 10 ×   3322 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:54 ("bench: Insert 100 Rows") ok
+[daqing/sqlite] bench sqlite_bench.mbt:54 ("bench: Insert 100 Rows") ok
 time (mean ± σ)         range (min … max)
  149.43 µs ±   1.28 µs   147.30 µs … 150.57 µs  in 10 ×    666 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:73 ("bench: Insert with Transaction (100 rows)") ok
+[daqing/sqlite] bench sqlite_bench.mbt:73 ("bench: Insert with Transaction (100 rows)") ok
 time (mean ± σ)         range (min … max)
  127.25 µs ±  14.25 µs   120.02 µs … 164.03 µs  in 10 ×    828 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:94 ("bench: Select All Rows") ok
+[daqing/sqlite] bench sqlite_bench.mbt:94 ("bench: Select All Rows") ok
 time (mean ± σ)         range (min … max)
  156.87 µs ±   0.58 µs   155.89 µs … 157.96 µs  in 10 ×    631 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:122 ("bench: Select with WHERE clause") ok
+[daqing/sqlite] bench sqlite_bench.mbt:122 ("bench: Select with WHERE clause") ok
 time (mean ± σ)         range (min … max)
  159.77 µs ±   3.38 µs   157.43 µs … 166.32 µs  in 10 ×    633 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:151 ("bench: Update Rows") ok
+[daqing/sqlite] bench sqlite_bench.mbt:151 ("bench: Update Rows") ok
 time (mean ± σ)         range (min … max)
  162.33 µs ±   3.60 µs   159.66 µs … 171.34 µs  in 10 ×    623 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:179 ("bench: Delete Rows") ok
+[daqing/sqlite] bench sqlite_bench.mbt:179 ("bench: Delete Rows") ok
 time (mean ± σ)         range (min … max)
  158.66 µs ±   0.86 µs   157.23 µs … 160.01 µs  in 10 ×    626 runs
 
-[mizchi/sqlite] bench sqlite_bench.mbt:204 ("bench: Prepared Statement Reuse") ok
+[daqing/sqlite] bench sqlite_bench.mbt:204 ("bench: Prepared Statement Reuse") ok
 time (mean ± σ)         range (min … max)
   98.94 µs ±  11.78 µs    90.35 µs … 129.66 µs  in 10 ×   1113 runs
 ```

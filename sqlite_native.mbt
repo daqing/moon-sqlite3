@@ -19,13 +19,13 @@ extern "C" fn sqlite_open(filename : Bytes) -> Sqlite3 = "sqlite_open"
 #borrow(filename, vfs)
 pub extern "C" fn sqlite_open_v2(
   filename : Bytes,
-  flags : Int,
+  flags : Int32,
   vfs : Bytes,
 ) -> Sqlite3 = "sqlite_open_v2"
 
 ///|
 #borrow(ptr)
-extern "C" fn sqlite_is_null(ptr : Sqlite3) -> Int = "sqlite_is_null"
+extern "C" fn sqlite_is_null(ptr : Sqlite3) -> Int32 = "sqlite_is_null"
 
 ///|
 #borrow(db)
@@ -33,7 +33,7 @@ extern "C" fn sqlite_close(db : Sqlite3) -> Unit = "sqlite_close"
 
 ///|
 #borrow(db, sql)
-extern "C" fn sqlite_exec(db : Sqlite3, sql : Bytes) -> Int = "sqlite_exec"
+extern "C" fn sqlite_exec(db : Sqlite3, sql : Bytes) -> Int32 = "sqlite_exec"
 
 ///|
 #borrow(db, sql)
@@ -41,7 +41,7 @@ pub extern "C" fn sqlite_prepare(db : Sqlite3, sql : Bytes) -> Sqlite3Stmt = "sq
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_stmt_is_null(stmt : Sqlite3Stmt) -> Int = "sqlite_stmt_is_null"
+pub extern "C" fn sqlite_stmt_is_null(stmt : Sqlite3Stmt) -> Int32 = "sqlite_stmt_is_null"
 
 ///|
 #borrow(stmt)
@@ -51,29 +51,29 @@ pub extern "C" fn sqlite_finalize(stmt : Sqlite3Stmt) -> Unit = "sqlite_finalize
 #borrow(stmt)
 pub extern "C" fn sqlite_bind_int(
   stmt : Sqlite3Stmt,
-  idx : Int,
-  value : Int,
-) -> Int = "sqlite_bind_int"
+  idx : Int32,
+  value : Int32,
+) -> Int32 = "sqlite_bind_int"
 
 ///|
 #borrow(stmt, text)
 pub extern "C" fn sqlite_bind_text(
   stmt : Sqlite3Stmt,
-  idx : Int,
+  idx : Int32,
   text : Bytes,
-) -> Int = "sqlite_bind_text"
+) -> Int32 = "sqlite_bind_text"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_step(stmt : Sqlite3Stmt) -> Int = "sqlite_step"
+pub extern "C" fn sqlite_step(stmt : Sqlite3Stmt) -> Int32 = "sqlite_step"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_int(stmt : Sqlite3Stmt, col : Int) -> Int = "sqlite_column_int"
+pub extern "C" fn sqlite_column_int(stmt : Sqlite3Stmt, col : Int32) -> Int32 = "sqlite_column_int"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_text(stmt : Sqlite3Stmt, col : Int) -> Bytes = "sqlite_column_text"
+pub extern "C" fn sqlite_column_text(stmt : Sqlite3Stmt, col : Int32) -> Bytes = "sqlite_column_text"
 
 ///|
 #borrow(stmt)
@@ -83,7 +83,7 @@ extern "C" fn sqlite_reset(stmt : Sqlite3Stmt) -> Unit = "sqlite_reset"
 
 ///|
 #borrow(db)
-pub extern "C" fn sqlite_errcode(db : Sqlite3) -> Int = "sqlite_errcode"
+pub extern "C" fn sqlite_errcode(db : Sqlite3) -> Int32 = "sqlite_errcode"
 
 ///|
 #borrow(db)
@@ -91,16 +91,16 @@ pub extern "C" fn sqlite_errmsg(db : Sqlite3) -> Bytes = "sqlite_errmsg"
 
 ///|
 #borrow(db)
-pub extern "C" fn sqlite_extended_errcode(db : Sqlite3) -> Int = "sqlite_extended_errcode"
+pub extern "C" fn sqlite_extended_errcode(db : Sqlite3) -> Int32 = "sqlite_extended_errcode"
 
 ///|
-pub extern "C" fn sqlite_errstr(errcode : Int) -> Bytes = "sqlite_errstr"
+pub extern "C" fn sqlite_errstr(errcode : Int32) -> Bytes = "sqlite_errstr"
 
 // Additional bind functions
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_bind_null(stmt : Sqlite3Stmt, idx : Int) -> Int = "sqlite_bind_null"
+pub extern "C" fn sqlite_bind_null(stmt : Sqlite3Stmt, idx : Int32) -> Int32 = "sqlite_bind_null"
 
 ///|
 #borrow(stmt)
@@ -108,10 +108,14 @@ extern "C" fn sqlite_bind_int64_ffi(
   stmt : Sqlite3Stmt,
   idx : Int64,
   value : Int64,
-) -> Int = "sqlite_bind_int64"
+) -> Int32 = "sqlite_bind_int64"
 
 ///|
-pub fn sqlite_bind_int64(stmt : Sqlite3Stmt, idx : Int, value : Int64) -> Int {
+pub fn sqlite_bind_int64(
+  stmt : Sqlite3Stmt,
+  idx : Int32,
+  value : Int64,
+) -> Int32 {
   sqlite_bind_int64_ffi(stmt, idx.to_int64(), value)
 }
 
@@ -119,53 +123,56 @@ pub fn sqlite_bind_int64(stmt : Sqlite3Stmt, idx : Int, value : Int64) -> Int {
 #borrow(stmt)
 pub extern "C" fn sqlite_bind_double(
   stmt : Sqlite3Stmt,
-  idx : Int,
+  idx : Int32,
   value : Double,
-) -> Int = "sqlite_bind_double"
+) -> Int32 = "sqlite_bind_double"
 
 ///|
 #borrow(stmt, blob)
 pub extern "C" fn sqlite_bind_blob(
   stmt : Sqlite3Stmt,
-  idx : Int,
+  idx : Int32,
   blob : Bytes,
-) -> Int = "sqlite_bind_blob"
+) -> Int32 = "sqlite_bind_blob"
 
 // Additional column retrieval functions
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_int64(stmt : Sqlite3Stmt, col : Int) -> Int64 = "sqlite_column_int64"
+pub extern "C" fn sqlite_column_int64(stmt : Sqlite3Stmt, col : Int32) -> Int64 = "sqlite_column_int64"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_double(stmt : Sqlite3Stmt, col : Int) -> Double = "sqlite_column_double"
+pub extern "C" fn sqlite_column_double(
+  stmt : Sqlite3Stmt,
+  col : Int32,
+) -> Double = "sqlite_column_double"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_blob(stmt : Sqlite3Stmt, col : Int) -> Bytes = "sqlite_column_blob"
+pub extern "C" fn sqlite_column_blob(stmt : Sqlite3Stmt, col : Int32) -> Bytes = "sqlite_column_blob"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_bytes(stmt : Sqlite3Stmt, col : Int) -> Int = "sqlite_column_bytes"
+pub extern "C" fn sqlite_column_bytes(stmt : Sqlite3Stmt, col : Int32) -> Int32 = "sqlite_column_bytes"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_type(stmt : Sqlite3Stmt, col : Int) -> Int = "sqlite_column_type"
+pub extern "C" fn sqlite_column_type(stmt : Sqlite3Stmt, col : Int32) -> Int32 = "sqlite_column_type"
 
 // Metadata functions
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_count(stmt : Sqlite3Stmt) -> Int = "sqlite_column_count"
+pub extern "C" fn sqlite_column_count(stmt : Sqlite3Stmt) -> Int32 = "sqlite_column_count"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_column_name(stmt : Sqlite3Stmt, col : Int) -> Bytes = "sqlite_column_name"
+pub extern "C" fn sqlite_column_name(stmt : Sqlite3Stmt, col : Int32) -> Bytes = "sqlite_column_name"
 
 ///|
 #borrow(db)
-pub extern "C" fn sqlite_changes(db : Sqlite3) -> Int = "sqlite_changes"
+pub extern "C" fn sqlite_changes(db : Sqlite3) -> Int32 = "sqlite_changes"
 
 ///|
 #borrow(db)
@@ -175,23 +182,23 @@ pub extern "C" fn sqlite_last_insert_rowid(db : Sqlite3) -> Int64 = "sqlite_last
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_clear_bindings(stmt : Sqlite3Stmt) -> Int = "sqlite_clear_bindings"
+pub extern "C" fn sqlite_clear_bindings(stmt : Sqlite3Stmt) -> Int32 = "sqlite_clear_bindings"
 
 // Concurrency control
 
 ///|
 #borrow(db)
-pub extern "C" fn sqlite_busy_timeout(db : Sqlite3, ms : Int) -> Int = "sqlite_busy_timeout"
+pub extern "C" fn sqlite_busy_timeout(db : Sqlite3, ms : Int32) -> Int32 = "sqlite_busy_timeout"
 
 // Transaction management
 
 ///|
 #borrow(db)
-pub extern "C" fn sqlite_get_autocommit(db : Sqlite3) -> Int = "sqlite_get_autocommit"
+pub extern "C" fn sqlite_get_autocommit(db : Sqlite3) -> Int32 = "sqlite_get_autocommit"
 
 ///|
 #borrow(db)
-pub extern "C" fn sqlite_total_changes(db : Sqlite3) -> Int = "sqlite_total_changes"
+pub extern "C" fn sqlite_total_changes(db : Sqlite3) -> Int32 = "sqlite_total_changes"
 
 // Statement introspection
 
@@ -201,11 +208,11 @@ pub extern "C" fn sqlite_sql(stmt : Sqlite3Stmt) -> Bytes = "sqlite_sql"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_bind_parameter_count(stmt : Sqlite3Stmt) -> Int = "sqlite_bind_parameter_count"
+pub extern "C" fn sqlite_bind_parameter_count(stmt : Sqlite3Stmt) -> Int32 = "sqlite_bind_parameter_count"
 
 ///|
 #borrow(stmt)
-pub extern "C" fn sqlite_stmt_readonly(stmt : Sqlite3Stmt) -> Int = "sqlite_stmt_readonly"
+pub extern "C" fn sqlite_stmt_readonly(stmt : Sqlite3Stmt) -> Int32 = "sqlite_stmt_readonly"
 
 // Parameter names and indices
 
@@ -213,7 +220,7 @@ pub extern "C" fn sqlite_stmt_readonly(stmt : Sqlite3Stmt) -> Int = "sqlite_stmt
 #borrow(stmt)
 pub extern "C" fn sqlite_bind_parameter_name(
   stmt : Sqlite3Stmt,
-  idx : Int,
+  idx : Int32,
 ) -> Bytes = "sqlite_bind_parameter_name"
 
 ///|
@@ -221,7 +228,7 @@ pub extern "C" fn sqlite_bind_parameter_name(
 pub extern "C" fn sqlite_bind_parameter_index(
   stmt : Sqlite3Stmt,
   name : Bytes,
-) -> Int = "sqlite_bind_parameter_index"
+) -> Int32 = "sqlite_bind_parameter_index"
 
 // Database metadata
 
@@ -231,7 +238,7 @@ pub extern "C" fn sqlite_db_filename(db : Sqlite3, dbname : Bytes) -> Bytes = "s
 
 ///|
 #borrow(db, dbname)
-pub extern "C" fn sqlite_db_readonly(db : Sqlite3, dbname : Bytes) -> Int = "sqlite_db_readonly"
+pub extern "C" fn sqlite_db_readonly(db : Sqlite3, dbname : Bytes) -> Int32 = "sqlite_db_readonly"
 
 // SQL expansion
 
@@ -249,90 +256,94 @@ pub extern "C" fn sqlite_interrupt(db : Sqlite3) -> Unit = "sqlite_interrupt"
 
 ///|
 #borrow(db)
-pub extern "C" fn sqlite_limit(db : Sqlite3, id : Int, newVal : Int) -> Int = "sqlite_limit"
+pub extern "C" fn sqlite_limit(
+  db : Sqlite3,
+  id : Int32,
+  newVal : Int32,
+) -> Int32 = "sqlite_limit"
 
 // Constants
 
 ///|
-const SQLITE_OK : Int = 0
+const SQLITE_OK : Int32 = 0
 
 ///|
-pub const SQLITE_ROW : Int = 100
+pub const SQLITE_ROW : Int32 = 100
 
 ///|
-pub const SQLITE_DONE : Int = 101
+pub const SQLITE_DONE : Int32 = 101
 
 // SQLite type constants
 
 ///|
-pub const SQLITE_INTEGER : Int = 1
+pub const SQLITE_INTEGER : Int32 = 1
 
 ///|
-pub const SQLITE_FLOAT : Int = 2
+pub const SQLITE_FLOAT : Int32 = 2
 
 ///|
-pub const SQLITE_TEXT : Int = 3
+pub const SQLITE_TEXT : Int32 = 3
 
 ///|
-pub const SQLITE_BLOB : Int = 4
+pub const SQLITE_BLOB : Int32 = 4
 
 ///|
-pub const SQLITE_NULL : Int = 5
+pub const SQLITE_NULL : Int32 = 5
 
 // sqlite3_open_v2 flags
 
 ///|
-pub const SQLITE_OPEN_READONLY : Int = 0x00000001
+pub const SQLITE_OPEN_READONLY : Int32 = 0x00000001
 
 ///|
-pub const SQLITE_OPEN_READWRITE : Int = 0x00000002
+pub const SQLITE_OPEN_READWRITE : Int32 = 0x00000002
 
 ///|
-pub const SQLITE_OPEN_CREATE : Int = 0x00000004
+pub const SQLITE_OPEN_CREATE : Int32 = 0x00000004
 
 ///|
-pub const SQLITE_OPEN_MEMORY : Int = 0x00000080
+pub const SQLITE_OPEN_MEMORY : Int32 = 0x00000080
 
 ///|
-pub const SQLITE_OPEN_NOMUTEX : Int = 0x00008000
+pub const SQLITE_OPEN_NOMUTEX : Int32 = 0x00008000
 
 ///|
-pub const SQLITE_OPEN_FULLMUTEX : Int = 0x00010000
+pub const SQLITE_OPEN_FULLMUTEX : Int32 = 0x00010000
 
 // sqlite3_limit ID constants
 
 ///|
-pub const SQLITE_LIMIT_LENGTH : Int = 0
+pub const SQLITE_LIMIT_LENGTH : Int32 = 0
 
 ///|
-pub const SQLITE_LIMIT_SQL_LENGTH : Int = 1
+pub const SQLITE_LIMIT_SQL_LENGTH : Int32 = 1
 
 ///|
-pub const SQLITE_LIMIT_COLUMN : Int = 2
+pub const SQLITE_LIMIT_COLUMN : Int32 = 2
 
 ///|
-pub const SQLITE_LIMIT_EXPR_DEPTH : Int = 3
+pub const SQLITE_LIMIT_EXPR_DEPTH : Int32 = 3
 
 ///|
-pub const SQLITE_LIMIT_COMPOUND_SELECT : Int = 4
+pub const SQLITE_LIMIT_COMPOUND_SELECT : Int32 = 4
 
 ///|
-pub const SQLITE_LIMIT_VDBE_OP : Int = 5
+pub const SQLITE_LIMIT_VDBE_OP : Int32 = 5
 
 ///|
-pub const SQLITE_LIMIT_FUNCTION_ARG : Int = 6
+pub const SQLITE_LIMIT_FUNCTION_ARG : Int32 = 6
 
 ///|
-pub const SQLITE_LIMIT_ATTACHED : Int = 7
+pub const SQLITE_LIMIT_ATTACHED : Int32 = 7
 
 ///|
-pub const SQLITE_LIMIT_LIKE_PATTERN_LENGTH : Int = 8
+pub const SQLITE_LIMIT_LIKE_PATTERN_LENGTH : Int32 = 8
 
 ///|
-pub const SQLITE_LIMIT_VARIABLE_NUMBER : Int = 9
+pub const SQLITE_LIMIT_VARIABLE_NUMBER : Int32 = 9
 
 ///|
-pub const SQLITE_LIMIT_TRIGGER_DEPTH : Int = 10
+pub const SQLITE_LIMIT_TRIGGER_DEPTH : Int32 = 10
 
 // String -> Bytes conversion helper (UTF-8 encoding)
 
@@ -354,7 +365,7 @@ pub fn Database::open(path : String) -> Database? {
   if sqlite_is_null(db) == 1 {
     None
   } else {
-    Some({ handle: db })
+    Some({ handle: db, })
   }
 }
 
@@ -374,7 +385,7 @@ pub fn Database::prepare(self : Database, sql : String) -> Statement? {
   if sqlite_stmt_is_null(stmt) == 1 {
     None
   } else {
-    Some({ stmt, done: false })
+    Some({ stmt, done: false, })
   }
 }
 
@@ -384,7 +395,7 @@ pub fn Database::query(self : Database, sql : String) -> Statement? {
 }
 
 ///|
-pub fn Database::errcode(self : Database) -> Int {
+pub fn Database::errcode(self : Database) -> Int32 {
   sqlite_errcode(self.handle)
 }
 
@@ -394,12 +405,12 @@ pub fn Database::errmsg(self : Database) -> Bytes {
 }
 
 ///|
-pub fn Database::extended_errcode(self : Database) -> Int {
+pub fn Database::extended_errcode(self : Database) -> Int32 {
   sqlite_extended_errcode(self.handle)
 }
 
 ///|
-pub fn Database::changes(self : Database) -> Int {
+pub fn Database::changes(self : Database) -> Int32 {
   sqlite_changes(self.handle)
 }
 
@@ -409,7 +420,7 @@ pub fn Database::last_insert_rowid(self : Database) -> Int64 {
 }
 
 ///|
-pub fn Database::busy_timeout(self : Database, ms : Int) -> Bool {
+pub fn Database::busy_timeout(self : Database, ms : Int32) -> Bool {
   sqlite_busy_timeout(self.handle, ms) == SQLITE_OK
 }
 
@@ -419,7 +430,7 @@ pub fn Database::get_autocommit(self : Database) -> Bool {
 }
 
 ///|
-pub fn Database::total_changes(self : Database) -> Int {
+pub fn Database::total_changes(self : Database) -> Int32 {
   sqlite_total_changes(self.handle)
 }
 
@@ -492,24 +503,24 @@ pub fn Statement::execute(self : Statement) -> Bool {
 }
 
 ///|
-pub fn Statement::column_int(self : Statement, col : Int) -> Int {
+pub fn Statement::column_int(self : Statement, col : Int32) -> Int32 {
   sqlite_column_int(self.stmt, col)
 }
 
 ///|
-pub fn Statement::column_text(self : Statement, col : Int) -> Bytes {
+pub fn Statement::column_text(self : Statement, col : Int32) -> Bytes {
   sqlite_column_text(self.stmt, col)
 }
 
 ///|
-pub fn Statement::column_count(self : Statement) -> Int {
+pub fn Statement::column_count(self : Statement) -> Int32 {
   sqlite_column_count(self.stmt)
 }
 
 ///|
 /// Return the declared name of the `col`-th column in the result set.
 /// Returns "" when `col` is out of range. Mirrors sqlite3_column_name.
-pub fn Statement::column_name(self : Statement, col : Int) -> String {
+pub fn Statement::column_name(self : Statement, col : Int32) -> String {
   if col < 0 || col >= sqlite_column_count(self.stmt) {
     return ""
   }
@@ -518,7 +529,7 @@ pub fn Statement::column_name(self : Statement, col : Int) -> String {
 }
 
 ///|
-pub fn Statement::bind(self : Statement, idx : Int, value : SqlValue) -> Bool {
+pub fn Statement::bind(self : Statement, idx : Int32, value : SqlValue) -> Bool {
   let result = match value {
     Null => sqlite_bind_null(self.stmt, idx)
     Int(v) => sqlite_bind_int(self.stmt, idx, v)
@@ -541,7 +552,7 @@ pub fn Statement::bind_all(self : Statement, values : Array[SqlValue]) -> Bool {
 }
 
 ///|
-pub fn Statement::column(self : Statement, col : Int) -> SqlValue {
+pub fn Statement::column(self : Statement, col : Int32) -> SqlValue {
   let col_type = sqlite_column_type(self.stmt, col)
   match col_type {
     SQLITE_NULL => Null

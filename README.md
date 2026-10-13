@@ -28,20 +28,19 @@ SQLite database bindings for MoonBit - supports both **native** (C FFI) and **Ja
 ## Installation
 
 ```bash
-moon add mizchi/sqlite
+moon add daqing/sqlite
 ```
 
-Add to your `moon.pkg.json`:
+Add to your `moon.pkg`:
 
-```json
-{
-  "import": ["mizchi/sqlite"],
-  "link": {
-    "native": {
-      "cc-link-flags": "-lsqlite3"
-    }
-  }
+```
+import {
+  "daqing/sqlite",
 }
+
+options(
+  link: { "native": { "cc-link-flags": "-lsqlite3" } },
+)
 ```
 
 ## Usage

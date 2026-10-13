@@ -15,7 +15,7 @@ extern "js" fn new_database_sync(
 ///|
 pub fn NodeDatabaseSync::new(
   path : String,
-  returnArrays? : Bool = false,
+  returnArrays~ : Bool = false,
 ) -> NodeDatabaseSync {
   let opts = js_new_object()
   js_set(opts, "returnArrays", to_any_bool(returnArrays))
@@ -59,13 +59,13 @@ extern "js" fn to_any_stmt(v : NodeStatementSync) -> JsAny =
 
 ///|
 #borrow(v)
-extern "js" fn from_any_array(v : JsAny) -> Array[JsAny] =
+extern "js" fn from_any_array(v : JsAny) -> FixedArray[JsAny] =
   #| (v) => v
 
 ///|
 pub fn NodeStatementSync::run(
   self : NodeStatementSync,
-  anonymous_parameters? : Array[JsAny] = [],
+  anonymous_parameters~ : Array[JsAny] = [],
 ) -> JsAny {
   let args = js_new_array()
   for param in anonymous_parameters {
@@ -77,18 +77,22 @@ pub fn NodeStatementSync::run(
 ///|
 pub fn NodeStatementSync::all(
   self : NodeStatementSync,
-  anonymous_parameters? : Array[JsAny] = [],
+  anonymous_parameters~ : Array[JsAny] = [],
 ) -> Array[JsAny] {
   let args = js_new_array()
   for param in anonymous_parameters {
     js_array_push(args, param)
   }
-  from_any_array(js_apply(to_any_stmt(self), "all", args))
+  Array::from_fixed_array(
+    from_any_array(js_apply(to_any_stmt(self), "all", args)),
+  )
 }
 
 ///|
 pub fn NodeStatementSync::columns(self : NodeStatementSync) -> Array[JsAny] {
-  from_any_array(js_call0(to_any_stmt(self), "columns"))
+  Array::from_fixed_array(
+    from_any_array(js_call0(to_any_stmt(self), "columns")),
+  )
 }
 
 // High-level API compatible with native
@@ -151,14 +155,14 @@ priv struct StatementState {
   stmt : NodeStatementSync
   mut bound : Array[SqlValue]
   mut rows : Array[JsAny]
-  mut row_index : Int
+  mut row_index : Int32
   mut current_row : JsAny?
   mut done : Bool
 }
 
 ///|
 fn statement_state_new(stmt : NodeStatementSync) -> StatementState {
-  { stmt, bound: [], rows: [], row_index: 0, current_row: None, done: false }
+  { stmt, bound: [], rows: [], row_index: 0, current_row: None, done: false, }
 }
 
 ///|
@@ -185,7 +189,7 @@ pub struct Database {
 
 ///|
 pub fn Database::open(path : String) -> Database? {
-  Some({ db: NodeDatabaseSync::new(path, returnArrays=true) })
+  Some({ db: NodeDatabaseSync::new(path, returnArrays=true), })
 }
 
 ///|
@@ -201,7 +205,7 @@ pub fn Database::exec(self : Database, sql : String) -> Bool {
 
 ///|
 pub fn Database::prepare(self : Database, sql : String) -> Statement? {
-  Some({ state: statement_state_new(self.db.prepare(sql)) })
+  Some({ state: statement_state_new(self.db.prepare(sql)), })
 }
 
 ///|
@@ -210,7 +214,7 @@ pub fn Database::query(self : Database, sql : String) -> Statement? {
 }
 
 ///|
-pub fn Database::errcode(self : Database) -> Int {
+pub fn Database::errcode(self : Database) -> Int32 {
   let _ = self
   0
 }
@@ -222,13 +226,13 @@ pub fn Database::errmsg(self : Database) -> Bytes {
 }
 
 ///|
-pub fn Database::extended_errcode(self : Database) -> Int {
+pub fn Database::extended_errcode(self : Database) -> Int32 {
   let _ = self
   0
 }
 
 ///|
-pub fn Database::changes(self : Database) -> Int {
+pub fn Database::changes(self : Database) -> Int32 {
   match self.prepare("SELECT changes()") {
     Some(stmt) => {
       let mut result = 0
@@ -258,7 +262,7 @@ pub fn Database::last_insert_rowid(self : Database) -> Int64 {
 }
 
 ///|
-pub fn Database::busy_timeout(self : Database, ms : Int) -> Bool {
+pub fn Database::busy_timeout(self : Database, ms : Int32) -> Bool {
   let _ = self
   let _ = ms
   false
@@ -271,7 +275,7 @@ pub fn Database::get_autocommit(self : Database) -> Bool {
 }
 
 ///|
-pub fn Database::total_changes(self : Database) -> Int {
+pub fn Database::total_changes(self : Database) -> Int32 {
   match self.prepare("SELECT total_changes()") {
     Some(stmt) => {
       let mut result = 0
@@ -367,7 +371,7 @@ extern "js" fn to_any_js(v : JsAny) -> JsAny =
   #| (v) => v
 
 ///|
-pub fn Statement::column_int(self : Statement, col : Int) -> Int {
+pub fn Statement::column_int(self : Statement, col : Int32) -> Int32 {
   match self.state.current_row {
     Some(row) => {
       let value = js_get_index(to_any_js(row), col)
@@ -385,7 +389,7 @@ pub fn Statement::column_int(self : Statement, col : Int) -> Int {
 }
 
 ///|
-pub fn Statement::column_text(self : Statement, col : Int) -> Bytes {
+pub fn Statement::column_text(self : Statement, col : Int32) -> Bytes {
   match self.state.current_row {
     Some(row) => any_to_bytes(js_get_index(to_any_js(row), col))
     None => string_to_bytes("")
@@ -393,14 +397,14 @@ pub fn Statement::column_text(self : Statement, col : Int) -> Bytes {
 }
 
 ///|
-pub fn Statement::column_count(self : Statement) -> Int {
+pub fn Statement::column_count(self : Statement) -> Int32 {
   self.state.stmt.columns().length()
 }
 
 ///|
 /// Return the declared name of the `col`-th column in the result set.
 /// Returns "" when `col` is out of range. Mirrors sqlite3_column_name.
-pub fn Statement::column_name(self : Statement, col : Int) -> String {
+pub fn Statement::column_name(self : Statement, col : Int32) -> String {
   let cols = self.state.stmt.columns()
   if col < 0 || col >= cols.length() {
     return ""
@@ -409,7 +413,7 @@ pub fn Statement::column_name(self : Statement, col : Int) -> String {
 }
 
 ///|
-pub fn Statement::bind(self : Statement, idx : Int, value : SqlValue) -> Bool {
+pub fn Statement::bind(self : Statement, idx : Int32, value : SqlValue) -> Bool {
   if idx <= 0 {
     return false
   }
@@ -428,7 +432,7 @@ pub fn Statement::bind_all(self : Statement, values : Array[SqlValue]) -> Bool {
 }
 
 ///|
-pub fn Statement::column(self : Statement, col : Int) -> SqlValue {
+pub fn Statement::column(self : Statement, col : Int32) -> SqlValue {
   match self.state.current_row {
     Some(row) => any_to_sql_value(js_get_index(to_any_js(row), col))
     None => Null

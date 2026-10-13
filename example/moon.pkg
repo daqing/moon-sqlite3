@@ -1,0 +1,12 @@
+import {
+  "daqing/sqlite",
+  "moonbitlang/x/encoding",
+}
+
+pkgtype(kind: "executable")
+
+supported_targets = "native"
+
+options(
+  link: { "native": { "cc-link-flags": "-lsqlite3" } },
+)

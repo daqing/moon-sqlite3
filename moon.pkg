@@ -1,6 +1,7 @@
 import {
   "moonbitlang/x/encoding",
   "moonbitlang/core/bench",
+  "moonbitlang/core/debug",
 }
 
 warnings = "-6-29-35"

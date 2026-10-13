@@ -1,0 +1,31 @@
+# Packaging ignore rules. `.moonignore` overrides `.gitignore` for `moon package`,
+# so keep this in sync with `.gitignore`.
+
+# MoonBit
+target/
+*.mbti
+.mooncakes/
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+
+# IDE
+.vscode/
+.idea/
+_build
+
+# Nix
+result
+result-*
+.direnv/
+
+# Keep the example module and the TypeScript bench script out of the package.
+/example/
+/sqlite_bench.ts
+
+# The workspace manifest is only used for local development.
+/moon.work

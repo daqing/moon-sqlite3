@@ -1,13 +1,13 @@
+///|
 fn bytes_to_str(b : Bytes) -> String {
-  let sb = StringBuilder::new()
-  try {
-    @encoding.decode_to(b[:], sb, encoding=UTF8)
-  } catch {
+  let sb = StringBuilder()
+  @encoding.decode_to(b[:], sb, encoding=UTF8) catch {
     _ => ()
   }
   sb.to_string()
 }
 
+///|
 fn main {
   // Open in-memory database
   let db = @sqlite.Database::open(":memory:").unwrap()

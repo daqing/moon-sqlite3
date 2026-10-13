@@ -3,7 +3,7 @@
 
 ///|
 fn bytes_to_str(b : Bytes) -> String {
-  let sb = StringBuilder::new()
+  let sb = StringBuilder()
   @encoding.decode_to(b[:], sb, encoding=UTF8) catch {
     _ => ()
   }
@@ -17,7 +17,7 @@ fn str_to_bytes(s : String) -> Bytes {
 
 ///|
 test "basic: open and close" {
-  let db = Database::open(":memory:")
+  let db = @sqlite.Database::open(":memory:")
   inspect(db is None, content="false")
   match db {
     Some(db) => db.close()
@@ -27,7 +27,7 @@ test "basic: open and close" {
 
 ///|
 test "basic: create table and insert" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   let ok = db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)")
   inspect(ok, content="true")
   let ok2 = db.exec("INSERT INTO test (name) VALUES ('Alice')")
@@ -37,7 +37,7 @@ test "basic: create table and insert" {
 
 ///|
 test "basic: select single row" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)") |> ignore
   db.exec("INSERT INTO test (name) VALUES ('Alice')") |> ignore
   let stmt = db.prepare("SELECT id, name FROM test").unwrap()
@@ -51,7 +51,7 @@ test "basic: select single row" {
 
 ///|
 test "basic: select multiple rows" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)") |> ignore
   db.exec("INSERT INTO test (name) VALUES ('Alice')") |> ignore
   db.exec("INSERT INTO test (name) VALUES ('Bob')") |> ignore
@@ -61,17 +61,17 @@ test "basic: select multiple rows" {
   while stmt.step() {
     names.push(bytes_to_str(stmt.column_text(0)))
   }
-  inspect(names, content="[\"Alice\", \"Bob\", \"Charlie\"]")
+  @debug.debug_inspect(names, content="[\"Alice\", \"Bob\", \"Charlie\"]")
   stmt.finalize()
   db.close()
 }
 
 ///|
 test "basic: bind parameters" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, value INTEGER)") |> ignore
   let stmt = db.prepare("INSERT INTO test (value) VALUES (?)").unwrap()
-  stmt.bind(1, SqlValue::Int(42)) |> ignore
+  stmt.bind(1, @sqlite.SqlValue::Int(42)) |> ignore
   stmt.execute() |> ignore
   stmt.finalize()
   let query = db.prepare("SELECT value FROM test").unwrap()
@@ -83,7 +83,7 @@ test "basic: bind parameters" {
 
 ///|
 test "basic: column count" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE test (a INTEGER, b TEXT, c REAL)") |> ignore
   let stmt = db.prepare("SELECT a, b, c FROM test").unwrap()
   inspect(stmt.column_count(), content="3")
@@ -93,7 +93,7 @@ test "basic: column count" {
 
 ///|
 test "basic: transaction" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)") |> ignore
   db.begin() |> ignore
   db.exec("INSERT INTO test (name) VALUES ('Alice')") |> ignore
@@ -108,7 +108,7 @@ test "basic: transaction" {
 
 ///|
 test "basic: rollback" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)") |> ignore
   db.exec("INSERT INTO test (name) VALUES ('Initial')") |> ignore
   db.begin() |> ignore
@@ -123,14 +123,14 @@ test "basic: rollback" {
 
 ///|
 test "basic: iter" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE test (id INTEGER PRIMARY KEY, value INTEGER)") |> ignore
   db.exec("INSERT INTO test (value) VALUES (10)") |> ignore
   db.exec("INSERT INTO test (value) VALUES (20)") |> ignore
   db.exec("INSERT INTO test (value) VALUES (30)") |> ignore
   let stmt = db.prepare("SELECT value FROM test ORDER BY id").unwrap()
   let values = stmt.iter().map(fn(s) { s.column_int(0) }).collect()
-  inspect(values, content="[10, 20, 30]")
+  @debug.debug_inspect(values, content="[10, 20, 30]")
   stmt.finalize()
   db.close()
 }
@@ -139,7 +139,7 @@ test "basic: iter" {
 
 ///|
 test "database: integration" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   let ok = db.exec(
     "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)",
   )
@@ -167,7 +167,7 @@ test "database: integration" {
 
 ///|
 test "database: changes and rowid" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER PRIMARY KEY, value INTEGER)") |> ignore
   db.exec("INSERT INTO t (value) VALUES (100)") |> ignore
   inspect(db.changes(), content="1")
@@ -180,7 +180,7 @@ test "database: changes and rowid" {
 
 ///|
 test "database: total changes" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER)") |> ignore
   inspect(db.total_changes(), content="0")
   db.exec("INSERT INTO t VALUES (1)") |> ignore
@@ -191,7 +191,7 @@ test "database: total changes" {
 
 ///|
 test "transaction: basic" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER, value INTEGER)") |> ignore
   inspect(db.begin(), content="true")
   // Note: get_autocommit is not supported in JS target (always returns true)
@@ -207,7 +207,7 @@ test "transaction: basic" {
 
 ///|
 test "transaction: rollback" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER, value INTEGER)") |> ignore
   db.exec("INSERT INTO t VALUES (1, 100)") |> ignore
   db.begin() |> ignore
@@ -222,7 +222,7 @@ test "transaction: rollback" {
 
 ///|
 test "transaction: savepoint" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER, value INTEGER)") |> ignore
   db.begin() |> ignore
   db.exec("INSERT INTO t VALUES (1, 100)") |> ignore
@@ -240,7 +240,7 @@ test "transaction: savepoint" {
 
 ///|
 test "transaction: immediate and exclusive" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER)") |> ignore
   inspect(db.begin_immediate(), content="true")
   db.exec("INSERT INTO t VALUES (1)") |> ignore
@@ -258,7 +258,7 @@ test "transaction: immediate and exclusive" {
 
 ///|
 test "statement: iterator each" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE users (id INTEGER, name TEXT, age INTEGER)") |> ignore
   db.exec("INSERT INTO users VALUES (1, 'Alice', 30)") |> ignore
   db.exec("INSERT INTO users VALUES (2, 'Bob', 25)") |> ignore
@@ -277,7 +277,7 @@ test "statement: iterator each" {
 
 ///|
 test "statement: iterator map" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE users (id INTEGER, name TEXT, age INTEGER)") |> ignore
   db.exec("INSERT INTO users VALUES (1, 'Alice', 30)") |> ignore
   db.exec("INSERT INTO users VALUES (2, 'Bob', 25)") |> ignore
@@ -292,7 +292,7 @@ test "statement: iterator map" {
 
 ///|
 test "statement: reset and reuse" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER)") |> ignore
   db.exec("INSERT INTO t VALUES (1)") |> ignore
   db.exec("INSERT INTO t VALUES (2)") |> ignore
@@ -310,7 +310,7 @@ test "statement: reset and reuse" {
 
 ///|
 test "statement: bind and column" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER, name TEXT, value REAL)") |> ignore
   let stmt = db.prepare("INSERT INTO t VALUES (?, ?, ?)").unwrap()
   stmt.bind(1, Int(42)) |> ignore
@@ -340,7 +340,7 @@ test "statement: bind and column" {
 
 ///|
 test "statement: bind all types" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec(
     "CREATE TABLE t (id INTEGER, int_val INTEGER, double_val REAL, text_val TEXT, blob_val BLOB, null_val INTEGER)",
   )
@@ -384,7 +384,7 @@ test "statement: bind all types" {
 
 ///|
 test "statement: bind all" {
-  let db = Database::open(":memory:").unwrap()
+  let db = @sqlite.Database::open(":memory:").unwrap()
   db.exec("CREATE TABLE t (id INTEGER, name TEXT, value REAL)") |> ignore
   let stmt = db.prepare("INSERT INTO t VALUES (?, ?, ?)").unwrap()
   stmt.bind_all([Int(1), Text(str_to_bytes("Alice")), Double(3.14)]) |> ignore

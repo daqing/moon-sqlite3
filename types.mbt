@@ -3,7 +3,7 @@
 ///|
 pub(all) enum SqlValue {
   Null
-  Int(Int)
+  Int(Int32)
   Int64(Int64)
   Double(Double)
   Text(Bytes)

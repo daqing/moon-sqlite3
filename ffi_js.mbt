@@ -27,7 +27,7 @@ pub extern "js" fn is_integer(v : JsAny) -> Bool =
   #| (v) => Number.isInteger(v)
 
 ///|
-pub extern "js" fn to_any_int(v : Int) -> JsAny =
+pub extern "js" fn to_any_int(v : Int32) -> JsAny =
   #| (v) => v
 
 ///|
@@ -52,7 +52,7 @@ pub extern "js" fn to_any_bytes(v : Bytes) -> JsAny =
 
 ///|
 #borrow(v)
-pub extern "js" fn from_any_int(v : JsAny) -> Int =
+pub extern "js" fn from_any_int(v : JsAny) -> Int32 =
   #| (v) => v
 
 ///|
@@ -82,7 +82,7 @@ pub extern "js" fn js_get(obj : JsAny, key : String) -> JsAny =
 
 ///|
 #borrow(obj)
-pub extern "js" fn js_get_index(obj : JsAny, idx : Int) -> JsAny =
+pub extern "js" fn js_get_index(obj : JsAny, idx : Int32) -> JsAny =
   #| (obj, idx) => obj[idx]
 
 ///|
@@ -125,7 +125,7 @@ pub extern "js" fn js_array_push(arr : JsAny, v : JsAny) -> Unit =
 
 ///|
 #borrow(arr)
-pub extern "js" fn js_array_length(arr : JsAny) -> Int =
+pub extern "js" fn js_array_length(arr : JsAny) -> Int32 =
   #| (arr) => arr.length
 
 // Text encoding helpers
@@ -145,7 +145,7 @@ pub extern "js" fn is_uint8array(v : JsAny) -> Bool =
 
 ///|
 #borrow(v)
-pub extern "js" fn bigint_to_number(v : JsAny) -> Int =
+pub extern "js" fn bigint_to_number(v : JsAny) -> Int32 =
   #| (v) => Number(v)
 
 ///|
